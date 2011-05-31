@@ -20,8 +20,12 @@ class TagImg_Plugin implements Typecho_Plugin_Interface
      */
     public static function activate()
     {
-        Typecho_Plugin::factory('Widget_Abstract_Contents')->content  = array('TagImg_Plugin', 'parse');
-        return _t('Tag Image 插件启动成功，系统将根据指定的tag名调用图片');
+		if(function_exists('file_get_contents')&&function_exists('is_readable')){
+			Typecho_Plugin::factory('Widget_Abstract_Contents')->content  = array('TagImg_Plugin', 'parse');
+			return _t('Tag Image 插件启动成功，系统将根据指定的tag名调用图片');
+		}else{
+			return _t('Tag Image 插件依赖的函数不存在，不能成功激活');
+		}
     }
 
     /**
@@ -80,7 +84,7 @@ class TagImg_Plugin implements Typecho_Plugin_Interface
      */
     public static function getContentImg($tags){
         require('TagImg/Map.php');
-        $result = NULL;
+        $result = '';
         if ($tags) {
                foreach ($tags as $tag) {
                     if (in_array($tag['name'], $images)) {
@@ -90,7 +94,7 @@ class TagImg_Plugin implements Typecho_Plugin_Interface
             if($result){
                 return '<p>'.$result.'</p>';
             }
-            return '';
+            return false;
         }
     }
     
@@ -111,9 +115,9 @@ class TagImg_Plugin implements Typecho_Plugin_Interface
      * @access public
      * @return string
      */
-    public static function isWriteable()
+    public static function isReadable()
     {
        $path = __TYPECHO_ROOT_DIR__  . __TYPECHO_PLUGIN_DIR__.'/TagImg/Map.php' ;
-       return is_writeable($path);
+       return is_readable($path);
     }
 }

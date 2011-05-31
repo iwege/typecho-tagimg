@@ -1,5 +1,5 @@
 <?php
 $images = array(
     'linux'
-)
+);
 ?>
