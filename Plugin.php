@@ -65,9 +65,10 @@ class TagImg_Plugin implements Typecho_Plugin_Interface
      * @access public
      * @return void
      */
-    public static function parse($text,$widget)
+    public static function parse($text,$widget,$lastResult)
     {
         $tags = $widget->tags;
+	$text = !empty($lastResult)?$lastResult:$text;
         $tagImg = TagImg_Plugin::getContentImg($tags);
         if ($tagImg) {
             return $tagImg.$text;
